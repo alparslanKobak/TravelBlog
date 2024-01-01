@@ -1,0 +1,47 @@
+﻿@model TravelBlog.Models.BlogPost
+@{
+    ViewBag.Title = "Edit Blog Post";
+}
+
+<h2>Edit Blog Post</h2>
+
+@using (Html.BeginForm("Edit", "Blogger", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Image)
+        <input type="file" name="image" />
+        @if (Model.Image != null)
+        {
+            <div>
+                <img src="@Url.Content("~/Content/images/" + Model.Image)" width="150" />
+            </div>
+        }
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title)
+        @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CityId, "City")
+        @Html.DropDownList("CityId", null, htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.CityId)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Content)
+        @Html.TextAreaFor(model => model.Content, new { @class = "form-control" })
+    </div>
+
+
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+}
+

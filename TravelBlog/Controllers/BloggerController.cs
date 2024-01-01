@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,11 +14,14 @@ namespace TravelBlog.Controllers
     {
         private readonly IBlogPostCrud _blogPostCrud;
         private readonly ICityCrud _cityCrud;
-
-        public BloggerController(IBlogPostCrud blogPostCrud, ICityCrud cityCrud)
+        private readonly ICommentCrud _commentCrud;
+        private readonly ILikeCrud _likeCrud;
+        public BloggerController(IBlogPostCrud blogPostCrud, ICityCrud cityCrud, ICommentCrud commentCrud, ILikeCrud likeCrud)
         {
             _blogPostCrud = blogPostCrud;
             _cityCrud = cityCrud;
+            _commentCrud = commentCrud;
+            _likeCrud = likeCrud;
         }
 
         // GET: Blogger/Index
@@ -56,44 +60,65 @@ namespace TravelBlog.Controllers
         // GET: Blogger/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            BlogPost blogPost = _blogPostCrud.GetBlogPostByInclude(id);
+            ViewBag.CityId = new SelectList(_cityCrud.GetAll(), "Id", "Name", blogPost.CityId);
+            return View(blogPost);
         }
 
         // POST: Blogger/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, BlogPost blogPost, HttpPostedFileBase image)
         {
-            try
+            if (ModelState.IsValid)
             {
-               
+                if (image != null && image.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(image.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/images/"), fileName);
+                    image.SaveAs(path);
+                    blogPost.Image = fileName;
+                }
+                blogPost.AppUserId = (Session["User"] as AppUser).Id;
 
-                return RedirectToAction("Index");
+
+                _blogPostCrud.Update(blogPost, id);
+                return RedirectToAction("Index","Blogger");
             }
-            catch
-            {
-                return View();
-            }
+
+            ViewBag.CityId = new SelectList(_cityCrud.GetAll(), "Id", "Name", blogPost.CityId);
+            return View(blogPost);
         }
 
         // GET: Blogger/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+      
 
         // POST: Blogger/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
         {
             try
             {
-                // TODO: Add delete logic here
+                BlogPost blogPost = _blogPostCrud.GetBlogPostByInclude(id);
+                if (blogPost == null)
+                {
+                    // BlogPost bulunamadı, hata mesajı ile birlikte listeye geri dön
+                    TempData["Message"] = "<div class='alert alert-danger text-center'>BlogPost not found</div> ";
+                    return RedirectToAction("Index");
+                }
+
+             
+                _blogPostCrud.Delete(blogPost.Id);
+                TempData["Message"] = "<div class='alert alert-success text-center'>BlogPost deleted Successfully</div> ";
 
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                // Silme işlemi sırasında hata oluştu, kullanıcıya bilgi ver
+                TempData["Message"] = "<div class='alert alert-danger text-center'>Error</div> ";
+
+                return RedirectToAction("Index","Home");
             }
         }
     }

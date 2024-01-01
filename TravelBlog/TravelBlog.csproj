@@ -218,7 +218,7 @@
     <Content Include="Content\images\Ankara.png" />
     <Content Include="Content\images\Antalya.png" />
     <Content Include="Content\images\Bursa.png" />
-    <Content Include="Content\images\Diyarbakır.png" />
+    <Content Include="Content\images\Diyarbakir.png" />
     <Content Include="Content\images\DoguAnadolu.png" />
     <Content Include="Content\images\Ege.png" />
     <Content Include="Content\images\Erzurum.png" />
@@ -276,6 +276,7 @@
     <Content Include="Views\Auth\Register.cshtml" />
     <Content Include="Views\City\Details.cshtml" />
     <Content Include="Views\Blogger\Index.cshtml" />
+    <Content Include="Views\Blogger\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
