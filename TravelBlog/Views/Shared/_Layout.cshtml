@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Architecht Travel Blog</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/site.css" rel="stylesheet" />
+    <link href="~/Content/images/TravelBlogImg.png" rel="icon" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <link href="~/Content/MyStyle.css" rel="stylesheet" />
+</head>
+<body>
+
+
+    @Html.Partial("_Header")
+
+    <main role="main" class="container mt-5 pt-3">
+        @Html.Raw(TempData["Message"])
+        @RenderBody()
+    </main>
+    <footer class="container py-4">
+        <div class="border-top pt-3">
+            <p>&copy; @DateTime.Now.Year Architecht Travel Blog</p>
+        </div>
+    </footer>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

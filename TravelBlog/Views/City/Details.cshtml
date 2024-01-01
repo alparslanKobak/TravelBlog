@@ -1,0 +1,66 @@
+﻿@model TravelBlog.Models.City
+
+@{
+    ViewBag.Title = "City Details";
+}
+
+<style>
+    .city-header {
+        background-size: cover;
+        background-position: center;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #b7b09c;
+    }
+
+    .city-title {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 3rem;
+        text-shadow: 2px 2px 4px #000;
+    }
+
+    .blog-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 8px rgba(107, 64, 38, 0.6);
+    }
+
+    .blog-card img {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="city-header mt-4 border border-secondary ">
+    <h1 class="city-title">@Model.Name</h1>
+</div>
+
+
+<div class="container mt-4">
+    @if (Model.BlogPosts != null && Model.BlogPosts.Any())
+    {
+        <div class="row">
+            @foreach (var blogPost in Model.BlogPosts)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card blog-card h-100">
+                        <img src="~/Content/images/@blogPost.Image" class="card-img-top" alt="@blogPost.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@blogPost.Title</h5>
+                            <p class="card-text">@blogPost.Content.Substring(0, 50)...</p>
+                            <a href="~/BlogPost/Details/@blogPost.Id" class="btn btn-outline-secondary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No blog posts available for this city.</p>
+    }
+</div>

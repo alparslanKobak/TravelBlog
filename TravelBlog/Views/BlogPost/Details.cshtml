@@ -1,0 +1,156 @@
+﻿@model TravelBlog.Models.BlogPost
+
+@{
+
+    ViewBag.Title = "Details - " + Model.Title;
+}
+
+<style>
+    .blog-header {
+        background-color: rgba(0, 0, 0, 0.5);
+        background-size: cover;
+        background-position: center;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .blog-title {
+        color: white;
+        font-size: 4rem;
+        text-align: center;
+        background-color: rgba(0,0,0,0.7);
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .blog-content {
+        margin: 2rem 0;
+        font-size: 1.2rem;
+    }
+
+    .blog-date {
+        color: grey;
+        text-align: right;
+        margin-bottom: 1rem;
+    }
+
+    .blog-author {
+        font-size: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .comment-form-container {
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 30px;
+        border-radius: 8px;
+        margin: 30px 0;
+        color: #fff;
+    }
+
+    .comment-form h3 {
+        margin-bottom: 20px;
+    }
+
+    .comment-form textarea {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+    }
+
+    .comment-form button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .comment-form button:hover {
+            background-color: #45a049;
+        }
+
+    .comment-section {
+        background-color: #8B4513;
+        color: white;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+    }
+</style>
+<img class="w-100" style="height:500px" src="~/Content/images/@Model.Image" alt="@Model.Title" />
+
+<div class="blog-header">
+
+
+    <h1 class="blog-title mt-1">@Model.Title</h1>
+</div>
+@{
+    bool isLiked = Model.Likes.Any(l => l.AppUserId == (Session["User"] as TravelBlog.Models.AppUser)?.Id);
+    string buttonText = isLiked ? "Remove Like" : "Like";
+   string buttonClass = isLiked ? "btn btn-danger" : "btn btn-success";
+}
+
+<div class="container">
+    <p class="blog-date">@Model.CreateDate.ToString("MMMM dd, yyyy")</p>
+    <div class="like-form-container">
+        @using (Html.BeginForm("AddLike", "BlogPost", FormMethod.Post, new { @class = "like-form" }))
+        {
+            <input type="hidden" name="BlogPostId" value="@Model.Id" />
+            if (isLiked)
+            {
+                // If the user has already liked the post, send the like ID to remove it
+                var likeId = Model.Likes.FirstOrDefault(l => l.AppUserId == (Session["User"] as TravelBlog.Models.AppUser)?.Id)?.Id;
+                <input type="hidden" name="Id" value="@likeId" />
+            }
+            <button type="submit" class="@buttonClass">@buttonText</button>
+        }
+    </div>
+    <div class="blog-content">
+        @Html.Raw(Model.Content)
+    </div>
+    <p class="blog-author">Written by @Model.AppUser.UserName</p>
+    <p>@Model.Likes.Count User Liked</p>
+
+    <div class="comment-section">
+        <h3>Comments</h3>
+        @foreach (var comment in Model.Comments)
+        {
+            <div class="comment">
+                <p>@comment.Content</p>
+                <p>- @comment.AppUser.UserName, @comment.CreateDate.ToString("MMMM dd, yyyy")</p>
+            </div>
+        }
+    </div>
+
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="comment-form-container">
+                <div class="comment-form">
+                    <h3>Leave a comment</h3>
+                    @using (Html.BeginForm("AddComment", "BlogPost", FormMethod.Post))
+                    {
+                        <div class="form-group w-100">
+                            <label for="commentContent">Comment</label>
+                            <textarea class="form-control w-100" id="commentContent" name="Content" rows="3"></textarea>
+                        </div>
+                        <input type="hidden" name="BlogPostId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

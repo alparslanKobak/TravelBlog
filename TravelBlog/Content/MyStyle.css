@@ -1,0 +1,80 @@
+﻿/* Temel arkaplan rengi ve genel yazı tipi ayarları */
+body {
+    background-color: #f5f5dc; /* Açık krem rengi */
+    color: #333; /* Koyu gri yazı rengi */
+    font-family: 'Open Sans', sans-serif; /* Okunabilir ve modern bir yazı tipi */
+}
+
+/* Navbar ayarları */
+.navbar {
+    background-color: #b7b09c; /* Açık krem tonunda, biraz daha koyu bir renk */
+    border-bottom: 2px solid #9e9a88; /* Navbar altındaki ince bir şerit */
+}
+
+.navbar-brand, .nav-link {
+    color: #5d5b57; /* Koyu kahverengi tonu */
+}
+
+    .navbar-brand:hover, .nav-link:hover {
+        color: #333; /* Mouse üzerine geldiğinde daha koyu bir renk */
+    }
+
+/* Footer ayarları */
+footer {
+    background-color: #b7b09c;
+    color: #5d5b57;
+    padding: 1rem 0;
+}
+
+    footer p {
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+
+
+
+
+/* Logo ayarları */
+.navbar-brand img {
+    max-height: 40px; /* Logo boyutu */
+    margin-right: 15px; /* Logodan sonraki boşluk */
+}
+
+
+
+
+.region-header {
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.region-title {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.city-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(107, 64, 38, 0.6);
+}
+
+.city-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Küçük cihazlar için medya sorguları */
+@media (max-width: 768px) {
+    .navbar-brand img {
+        max-height: 35px; /* Küçük ekranlar için logo boyutu */
+    }
+}

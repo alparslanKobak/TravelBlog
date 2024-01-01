@@ -1,0 +1,67 @@
+﻿@model TravelBlog.Models.Region
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<style>
+    .region-header {
+        background-size: cover;
+        background-position: center;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #b7b09c;
+        
+    }
+
+    .region-title {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 3rem;
+        text-shadow: 2px 2px 4px #000;
+    }
+
+    .city-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 8px rgba(107, 64, 38, 0.6);
+    }
+
+    .city-card img {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="region-header mt-4 border border-secondary ">
+    <h1 class="region-title">@Model.Name</h1>
+</div>
+
+
+<div class="container mt-4">
+    @if (Model.Cities != null && Model.Cities.Any())
+    {
+        <div class="row">
+            @foreach (var city in Model.Cities)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card city-card h-100">
+                        <img src="~/Content/images/@city.Image" class="card-img-top" alt="@city.Name" />
+                        <div class="card-body">
+                            <h5 class="card-title">@city.Name</h5>
+                            <a href="~/City/Details/@city.Id" class="btn btn-outline-secondary">Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+
+
+

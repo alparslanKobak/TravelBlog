@@ -1,0 +1,81 @@
+﻿@model IEnumerable<TravelBlog.Models.BlogPost>
+<style>
+    .region-header {
+        background-size: cover;
+        background-position: center;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #b7b09c;
+    }
+
+    .region-title {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 3rem;
+        text-shadow: 2px 2px 4px #000;
+    }
+
+    .card-img-top {
+        height: 200px; /* Or set a fixed height */
+        object-fit: cover; /* This will cover the entire card top area */
+    }
+
+    .card-title {
+        font-size: 1.25rem; /* Adjust title size as needed */
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis; /* Ensures the title doesn't break the card layout */
+    }
+
+    .card-text {
+        font-size: 0.9rem; /* Adjust text size as needed */
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+    }
+
+        .card:hover {
+            transform: scale(1.03); /* Slightly scale up the card */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth effect */
+        }
+</style>
+
+<div class="region-header mt-4 border border-secondary ">
+    <h1 class="region-title">Your Blogs</h1>
+</div>
+
+<button class="btn btn-success mt-2 mb-2">Create New +</button>
+
+<main class="container mt-4">
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (TravelBlog.Models.BlogPost blogPost in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="~/Content/images/@blogPost.Image" class="card-img-top" alt="@blogPost.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@blogPost.Title</h5>
+                            <p class="card-text">@blogPost.Content.Substring(0, Math.Min(70, blogPost.Content.Length))...</p>
+                            <a href="@Url.Action("Details", "BlogPost", new { id = blogPost.Id })" class="btn btn-outline-secondary">Read More</a> || 
+                            <a href="@Url.Action("Edit","Blogger", new {id = blogPost.Id})" class="btn btn-outline-primary ms-1">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-12">
+                <p class="text-center">No blog posts found.</p>
+                <button class="btn btn-success">Create New +</button>
+            </div>
+        }
+    </div>
+</main>
