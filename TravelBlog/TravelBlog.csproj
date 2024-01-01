@@ -277,6 +277,7 @@
     <Content Include="Views\City\Details.cshtml" />
     <Content Include="Views\Blogger\Index.cshtml" />
     <Content Include="Views\Blogger\Edit.cshtml" />
+    <Content Include="Views\Blogger\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

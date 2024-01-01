@@ -9,7 +9,7 @@ using TravelBlog.Models;
 
 namespace TravelBlog.Controllers
 {
-   
+
     public class BloggerController : Controller
     {
         private readonly IBlogPostCrud _blogPostCrud;
@@ -28,33 +28,52 @@ namespace TravelBlog.Controllers
         public ActionResult Index()
         {
             AppUser user = Session["User"] as AppUser;
-           
+
             List<BlogPost> blogPosts = _blogPostCrud.GetAllBlogPostByInclude(b => b.AppUserId == user.Id);
             return View(blogPosts);
-         
+
         }
 
 
         // GET: Blogger/Create
         public ActionResult Create()
         {
+            ViewBag.CityId = new SelectList(_cityCrud.GetAll(), "Id", "Name");
             return View();
         }
 
         // POST: Blogger/Create
         [HttpPost]
-        public ActionResult Create(BlogPost collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(BlogPost blogPost, HttpPostedFileBase image)
         {
             try
             {
-                // TODO: Add insert logic here
+                if (ModelState.IsValid)
+                {
+                    if (image != null && image.ContentLength > 0)
+                    {
+                        var fileName = Path.GetFileName(image.FileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/images/"), fileName);
+                        image.SaveAs(path);
+                        blogPost.Image = fileName; // Save image file name to BlogPost object
+                    }
 
-                return RedirectToAction("Index");
+                    // Set the user Id for the blog post
+                    AppUser user = Session["User"] as AppUser;
+                    blogPost.AppUserId = user.Id;
+
+                    _blogPostCrud.Add(blogPost);
+                    return RedirectToAction("Index");
+                }
             }
             catch
             {
-                return View();
+                TempData["Message"] = "<div class='alert alert-danger text-center'>Error</div> ";
             }
+
+            ViewBag.CityId = new SelectList(_cityCrud.GetAll(), "Id", "Name", blogPost.CityId);
+            return View(blogPost);
         }
 
         // GET: Blogger/Edit/5
@@ -82,7 +101,7 @@ namespace TravelBlog.Controllers
 
 
                 _blogPostCrud.Update(blogPost, id);
-                return RedirectToAction("Index","Blogger");
+                return RedirectToAction("Index", "Blogger");
             }
 
             ViewBag.CityId = new SelectList(_cityCrud.GetAll(), "Id", "Name", blogPost.CityId);
@@ -90,7 +109,7 @@ namespace TravelBlog.Controllers
         }
 
         // GET: Blogger/Delete/5
-      
+
 
         // POST: Blogger/Delete/5
         [HttpPost]
@@ -107,7 +126,7 @@ namespace TravelBlog.Controllers
                     return RedirectToAction("Index");
                 }
 
-             
+
                 _blogPostCrud.Delete(blogPost.Id);
                 TempData["Message"] = "<div class='alert alert-success text-center'>BlogPost deleted Successfully</div> ";
 
@@ -118,7 +137,7 @@ namespace TravelBlog.Controllers
                 // Silme işlemi sırasında hata oluştu, kullanıcıya bilgi ver
                 TempData["Message"] = "<div class='alert alert-danger text-center'>Error</div> ";
 
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
         }
     }
